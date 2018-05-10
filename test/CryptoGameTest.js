@@ -7,9 +7,9 @@ contract("CryptoGame", function(accounts) {
 		global[hfn[i]] = helpfulFunctions[hfn[i]];
 	}
 
-	checkTotalSupply(0);
+	checksTotalSupply(0);
 
 	for (x = 0; x < 100; x++) {
-		checkDoggyCreation("Doggy" + x;
+		checkDoggyCreation("Doggy" + x);
 	}
 });

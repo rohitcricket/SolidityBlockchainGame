@@ -24,6 +24,7 @@ contract CryptoGame is AccessControl, DetailedERC721{
 		address owner
 	);
 
+
 	event TokenSold(
 		uint256 indexed tokenId, 
 		string name, 
@@ -169,6 +170,7 @@ contract CryptoGame is AccessControl, DetailedERC721{
 		require(msg.value >= sellingPrice);
 
 		_transfer(oldOwner, newOwner, _tokenId);
+		tokenIdToPrice[_tokenId] = nextPriceOf(_tokenId);
 		TokenSold(
 			_tokenId,
 			doggies[_tokenId].name,
@@ -243,7 +245,7 @@ contract CryptoGame is AccessControl, DetailedERC721{
 	function transferFrom(address _from, address _to, uint256 _tokenId) public whenNotPaused onlyERC721 {
 		require(_to != address(0));
 		require(_owns(_from, _tokenId));
-		require(_appoved(msg.sender, _tokenId));
+		require(_approved(msg.sender, _tokenId));
 
 		_transfer(_from, _to, _tokenId);
 	}
@@ -255,12 +257,12 @@ contract CryptoGame is AccessControl, DetailedERC721{
 		_transfer(msg.sender, _to, _tokenId);
 	}
 
-	function implementsERC271() public view whenNotPaused returns (bool) {
+	function implementsERC721() public view whenNotPaused returns (bool) {
 		return erc721Enabled;
 	}
 
 	function takeOwnership(uint256 _tokenId) public whenNotPaused onlyERC721 {
-		require(_appoved(msg.sender, _tokenId));
+		require(_approved(msg.sender, _tokenId));
 		_transfer(tokenIdToOwner[_tokenId], msg.sender, _tokenId);
 	}
 
@@ -276,7 +278,7 @@ contract CryptoGame is AccessControl, DetailedERC721{
 		return tokenIdToOwner[_tokenId] == _claimant;
 	}
 
-	function _appoved(address _to, uint256 _tokenId) private view returns (bool) {
+	function _approved(address _to, uint256 _tokenId) private view returns (bool) {
 		return tokenIdToApproved[_tokenId] == _to;
 	}
 
